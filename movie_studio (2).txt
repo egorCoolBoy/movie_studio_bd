@@ -1,0 +1,818 @@
+--
+-- PostgreSQL database dump
+--
+
+\restrict WVgdd3XVeTDDc6l68xOI3I0wZp0LZuQjr1iTbpSKyekBEZhL4T0ygmWq3BAtGfT
+
+-- Dumped from database version 17.6
+-- Dumped by pg_dump version 17.6
+
+-- Started on 2026-06-15 15:15:16
+
+SET statement_timeout = 0;
+SET lock_timeout = 0;
+SET idle_in_transaction_session_timeout = 0;
+SET transaction_timeout = 0;
+SET client_encoding = 'UTF8';
+SET standard_conforming_strings = on;
+SELECT pg_catalog.set_config('search_path', '', false);
+SET check_function_bodies = false;
+SET xmloption = content;
+SET client_min_messages = warning;
+SET row_security = off;
+
+SET default_tablespace = '';
+
+SET default_table_access_method = heap;
+
+--
+-- TOC entry 229 (class 1259 OID 25532)
+-- Name: actor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.actor (
+    actor_id integer NOT NULL,
+    first_name character varying(40) NOT NULL,
+    second_name character varying(40) NOT NULL,
+    middle_name character varying(40),
+    gender character varying(1),
+    contact character varying(40) NOT NULL,
+    description text NOT NULL,
+    fee integer NOT NULL,
+    CONSTRAINT actor_gender_check CHECK (((gender)::text = ANY ((ARRAY['М'::character varying, 'Ж'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.actor OWNER TO postgres;
+
+--
+-- TOC entry 228 (class 1259 OID 25531)
+-- Name: actor_actor_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.actor_actor_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.actor_actor_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5025 (class 0 OID 0)
+-- Dependencies: 228
+-- Name: actor_actor_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.actor_actor_id_seq OWNED BY public.actor.actor_id;
+
+
+--
+-- TOC entry 237 (class 1259 OID 25625)
+-- Name: actor_of_scene; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.actor_of_scene (
+    movie_id integer NOT NULL,
+    scene_number integer NOT NULL,
+    actor_id integer NOT NULL
+);
+
+
+ALTER TABLE public.actor_of_scene OWNER TO postgres;
+
+--
+-- TOC entry 235 (class 1259 OID 25594)
+-- Name: author_of_script; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.author_of_script (
+    script_id integer NOT NULL,
+    employee_id integer NOT NULL
+);
+
+
+ALTER TABLE public.author_of_script OWNER TO postgres;
+
+--
+-- TOC entry 227 (class 1259 OID 25522)
+-- Name: character; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public."character" (
+    character_id integer NOT NULL,
+    first_name character varying(40) NOT NULL,
+    second_name character varying(40) NOT NULL,
+    middle_name character varying(40),
+    gender character varying(1),
+    description text NOT NULL,
+    CONSTRAINT character_gender_check CHECK (((gender)::text = ANY ((ARRAY['М'::character varying, 'Ж'::character varying, '-'::character varying])::text[])))
+);
+
+
+ALTER TABLE public."character" OWNER TO postgres;
+
+--
+-- TOC entry 226 (class 1259 OID 25521)
+-- Name: character_character_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.character_character_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.character_character_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5026 (class 0 OID 0)
+-- Dependencies: 226
+-- Name: character_character_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.character_character_id_seq OWNED BY public."character".character_id;
+
+
+--
+-- TOC entry 225 (class 1259 OID 25514)
+-- Name: employee; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.employee (
+    employee_id integer NOT NULL,
+    first_name character varying(40) NOT NULL,
+    second_name character varying(40) NOT NULL,
+    middle_name character varying(40),
+    contact character varying(100) NOT NULL,
+    gender character varying(1),
+    CONSTRAINT employee_gender_check CHECK (((gender)::text = ANY ((ARRAY['М'::character varying, 'Ж'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.employee OWNER TO postgres;
+
+--
+-- TOC entry 224 (class 1259 OID 25513)
+-- Name: employee_employee_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.employee_employee_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.employee_employee_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5027 (class 0 OID 0)
+-- Dependencies: 224
+-- Name: employee_employee_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.employee_employee_id_seq OWNED BY public.employee.employee_id;
+
+
+--
+-- TOC entry 234 (class 1259 OID 25578)
+-- Name: employee_of_movie; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.employee_of_movie (
+    post character varying(50),
+    movie_id integer NOT NULL,
+    employee_id integer NOT NULL,
+    CONSTRAINT employee_of_movie_post_check CHECK (((post)::text = ANY ((ARRAY['режиссер'::character varying, 'продюсер'::character varying, 'сценарист'::character varying, 'композитор'::character varying, 'монтажер'::character varying, 'художник по костюмам'::character varying, 'художник-декоратор'::character varying, 'гример-художник'::character varying, 'звукорежиссер'::character varying, 'колорист'::character varying, 'кастинг-директор'::character varying, 'директор фильма'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.employee_of_movie OWNER TO postgres;
+
+--
+-- TOC entry 233 (class 1259 OID 25562)
+-- Name: employee_of_scene; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.employee_of_scene (
+    post character varying(50),
+    employee_id integer NOT NULL,
+    movie_id integer NOT NULL,
+    scene_number integer NOT NULL,
+    CONSTRAINT employee_of_scene_post_check CHECK (((post)::text = ANY ((ARRAY['режиссер-постановщик'::character varying, 'оператор-постановщик'::character varying, 'ассистент режиссера'::character varying, 'осветитель'::character varying, 'звукорежиссер'::character varying, 'художник-постановщик'::character varying, 'гример'::character varying, 'костюмер'::character varying, 'реквизитор'::character varying, 'постановщик трюков'::character varying, 'раскадровщик'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.employee_of_scene OWNER TO postgres;
+
+--
+-- TOC entry 232 (class 1259 OID 25555)
+-- Name: equipment; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.equipment (
+    equipment_id integer NOT NULL,
+    name_of_equipment character varying(100) NOT NULL,
+    type_of_equipment character varying(100),
+    cost_of_rent integer NOT NULL,
+    CONSTRAINT equipment_type_of_equipment_check CHECK (((type_of_equipment)::text = ANY ((ARRAY['камера'::character varying, 'объектив'::character varying, 'стабилизатор'::character varying, 'кран'::character varying, 'тележка'::character varying, 'штатив'::character varying, 'прожектор'::character varying, 'рефлектор'::character varying, 'рассеиватель'::character varying, 'микрофон'::character varying, 'петличка'::character varying, 'звукозаписывающее устройство'::character varying, 'микшерный пульт'::character varying, 'наушники мониторинга'::character varying, 'ветрозащита'::character varying, 'хромакей'::character varying, 'отражатель'::character varying, 'фильтр'::character varying, 'дрон'::character varying, 'подводная камера'::character varying, 'экшен-камера'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.equipment OWNER TO postgres;
+
+--
+-- TOC entry 231 (class 1259 OID 25554)
+-- Name: equipment_equipment_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.equipment_equipment_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.equipment_equipment_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5028 (class 0 OID 0)
+-- Dependencies: 231
+-- Name: equipment_equipment_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.equipment_equipment_id_seq OWNED BY public.equipment.equipment_id;
+
+
+--
+-- TOC entry 238 (class 1259 OID 25640)
+-- Name: equipment_of_scene; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.equipment_of_scene (
+    equipment_id integer NOT NULL,
+    movie_id integer NOT NULL,
+    scene_number integer NOT NULL
+);
+
+
+ALTER TABLE public.equipment_of_scene OWNER TO postgres;
+
+--
+-- TOC entry 239 (class 1259 OID 25655)
+-- Name: genre_of_movie; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.genre_of_movie (
+    movie_id integer NOT NULL,
+    genre character varying(30) NOT NULL
+);
+
+
+ALTER TABLE public.genre_of_movie OWNER TO postgres;
+
+--
+-- TOC entry 222 (class 1259 OID 25489)
+-- Name: location; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.location (
+    location_id integer NOT NULL,
+    name_of_location character varying(100) NOT NULL,
+    address character varying(150) NOT NULL,
+    cost_of_rent integer NOT NULL,
+    phone_number character varying(11) NOT NULL
+);
+
+
+ALTER TABLE public.location OWNER TO postgres;
+
+--
+-- TOC entry 221 (class 1259 OID 25488)
+-- Name: location_location_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.location_location_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.location_location_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5029 (class 0 OID 0)
+-- Dependencies: 221
+-- Name: location_location_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.location_location_id_seq OWNED BY public.location.location_id;
+
+
+--
+-- TOC entry 220 (class 1259 OID 25473)
+-- Name: movie; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.movie (
+    movie_id integer NOT NULL,
+    script_id integer NOT NULL,
+    name_of_movie character varying(100) NOT NULL,
+    budget integer,
+    status text,
+    CONSTRAINT movie_budget_check CHECK ((budget > 10000)),
+    CONSTRAINT movie_status_check CHECK ((status = ANY (ARRAY['Готов'::text, 'Не готов'::text, 'В процессе'::text])))
+);
+
+
+ALTER TABLE public.movie OWNER TO postgres;
+
+--
+-- TOC entry 219 (class 1259 OID 25472)
+-- Name: movie_movie_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.movie_movie_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.movie_movie_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5030 (class 0 OID 0)
+-- Dependencies: 219
+-- Name: movie_movie_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.movie_movie_id_seq OWNED BY public.movie.movie_id;
+
+
+--
+-- TOC entry 236 (class 1259 OID 25609)
+-- Name: role_of_actor; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.role_of_actor (
+    age_group character varying(20) NOT NULL,
+    type_of_role character varying(30) NOT NULL,
+    actor_id integer NOT NULL,
+    character_id integer NOT NULL,
+    CONSTRAINT role_of_actor_age_group_check CHECK (((age_group)::text = ANY ((ARRAY['Младенец'::character varying, 'Ребенок'::character varying, 'Подросток'::character varying, 'Взрослый'::character varying, 'Старый'::character varying])::text[])))
+);
+
+
+ALTER TABLE public.role_of_actor OWNER TO postgres;
+
+--
+-- TOC entry 223 (class 1259 OID 25495)
+-- Name: scene; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.scene (
+    scene_number integer NOT NULL,
+    movie_id integer NOT NULL,
+    location_id integer NOT NULL,
+    description text NOT NULL,
+    status text,
+    CONSTRAINT scene_status_check CHECK ((status = ANY (ARRAY['Готов'::text, 'Не готов'::text, 'В процессе'::text])))
+);
+
+
+ALTER TABLE public.scene OWNER TO postgres;
+
+--
+-- TOC entry 218 (class 1259 OID 25464)
+-- Name: script; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.script (
+    script_id integer NOT NULL,
+    description text NOT NULL
+);
+
+
+ALTER TABLE public.script OWNER TO postgres;
+
+--
+-- TOC entry 217 (class 1259 OID 25463)
+-- Name: script_script_id_seq; Type: SEQUENCE; Schema: public; Owner: postgres
+--
+
+CREATE SEQUENCE public.script_script_id_seq
+    AS integer
+    START WITH 1
+    INCREMENT BY 1
+    NO MINVALUE
+    NO MAXVALUE
+    CACHE 1;
+
+
+ALTER SEQUENCE public.script_script_id_seq OWNER TO postgres;
+
+--
+-- TOC entry 5031 (class 0 OID 0)
+-- Dependencies: 217
+-- Name: script_script_id_seq; Type: SEQUENCE OWNED BY; Schema: public; Owner: postgres
+--
+
+ALTER SEQUENCE public.script_script_id_seq OWNED BY public.script.script_id;
+
+
+--
+-- TOC entry 230 (class 1259 OID 25541)
+-- Name: take; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.take (
+    take_number integer NOT NULL,
+    movie_id integer NOT NULL,
+    scene_number integer NOT NULL,
+    description text NOT NULL,
+    date_of_creation date NOT NULL,
+    duration time without time zone NOT NULL,
+    CONSTRAINT take_take_number_check CHECK ((take_number > 0))
+);
+
+
+ALTER TABLE public.take OWNER TO postgres;
+
+--
+-- TOC entry 4813 (class 2604 OID 25535)
+-- Name: actor actor_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor ALTER COLUMN actor_id SET DEFAULT nextval('public.actor_actor_id_seq'::regclass);
+
+
+--
+-- TOC entry 4812 (class 2604 OID 25525)
+-- Name: character character_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."character" ALTER COLUMN character_id SET DEFAULT nextval('public.character_character_id_seq'::regclass);
+
+
+--
+-- TOC entry 4811 (class 2604 OID 25517)
+-- Name: employee employee_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee ALTER COLUMN employee_id SET DEFAULT nextval('public.employee_employee_id_seq'::regclass);
+
+
+--
+-- TOC entry 4814 (class 2604 OID 25558)
+-- Name: equipment equipment_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment ALTER COLUMN equipment_id SET DEFAULT nextval('public.equipment_equipment_id_seq'::regclass);
+
+
+--
+-- TOC entry 4810 (class 2604 OID 25492)
+-- Name: location location_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.location ALTER COLUMN location_id SET DEFAULT nextval('public.location_location_id_seq'::regclass);
+
+
+--
+-- TOC entry 4809 (class 2604 OID 25476)
+-- Name: movie movie_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movie ALTER COLUMN movie_id SET DEFAULT nextval('public.movie_movie_id_seq'::regclass);
+
+
+--
+-- TOC entry 4808 (class 2604 OID 25467)
+-- Name: script script_id; Type: DEFAULT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.script ALTER COLUMN script_id SET DEFAULT nextval('public.script_script_id_seq'::regclass);
+
+
+--
+-- TOC entry 4853 (class 2606 OID 25629)
+-- Name: actor_of_scene actor_of_scene_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor_of_scene
+    ADD CONSTRAINT actor_of_scene_pkey PRIMARY KEY (movie_id, scene_number, actor_id);
+
+
+--
+-- TOC entry 4839 (class 2606 OID 25540)
+-- Name: actor actor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor
+    ADD CONSTRAINT actor_pkey PRIMARY KEY (actor_id);
+
+
+--
+-- TOC entry 4849 (class 2606 OID 25598)
+-- Name: author_of_script author_of_script_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.author_of_script
+    ADD CONSTRAINT author_of_script_pkey PRIMARY KEY (script_id, employee_id);
+
+
+--
+-- TOC entry 4837 (class 2606 OID 25530)
+-- Name: character character_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public."character"
+    ADD CONSTRAINT character_pkey PRIMARY KEY (character_id);
+
+
+--
+-- TOC entry 4847 (class 2606 OID 25583)
+-- Name: employee_of_movie employee_of_movie_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee_of_movie
+    ADD CONSTRAINT employee_of_movie_pkey PRIMARY KEY (movie_id, employee_id);
+
+
+--
+-- TOC entry 4845 (class 2606 OID 25567)
+-- Name: employee_of_scene employee_of_scene_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee_of_scene
+    ADD CONSTRAINT employee_of_scene_pkey PRIMARY KEY (movie_id, scene_number, employee_id);
+
+
+--
+-- TOC entry 4835 (class 2606 OID 25520)
+-- Name: employee employee_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee
+    ADD CONSTRAINT employee_pkey PRIMARY KEY (employee_id);
+
+
+--
+-- TOC entry 4855 (class 2606 OID 25644)
+-- Name: equipment_of_scene equipment_of_scene_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment_of_scene
+    ADD CONSTRAINT equipment_of_scene_pkey PRIMARY KEY (movie_id, scene_number, equipment_id);
+
+
+--
+-- TOC entry 4843 (class 2606 OID 25561)
+-- Name: equipment equipment_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment
+    ADD CONSTRAINT equipment_pkey PRIMARY KEY (equipment_id);
+
+
+--
+-- TOC entry 4857 (class 2606 OID 25659)
+-- Name: genre_of_movie genre_of_movie_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.genre_of_movie
+    ADD CONSTRAINT genre_of_movie_pkey PRIMARY KEY (movie_id, genre);
+
+
+--
+-- TOC entry 4831 (class 2606 OID 25494)
+-- Name: location location_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.location
+    ADD CONSTRAINT location_pkey PRIMARY KEY (location_id);
+
+
+--
+-- TOC entry 4829 (class 2606 OID 25482)
+-- Name: movie movie_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movie
+    ADD CONSTRAINT movie_pkey PRIMARY KEY (movie_id);
+
+
+--
+-- TOC entry 4851 (class 2606 OID 25614)
+-- Name: role_of_actor role_of_actor_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.role_of_actor
+    ADD CONSTRAINT role_of_actor_pkey PRIMARY KEY (actor_id, character_id);
+
+
+--
+-- TOC entry 4833 (class 2606 OID 25502)
+-- Name: scene scene_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.scene
+    ADD CONSTRAINT scene_pkey PRIMARY KEY (movie_id, scene_number);
+
+
+--
+-- TOC entry 4827 (class 2606 OID 25471)
+-- Name: script script_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.script
+    ADD CONSTRAINT script_pkey PRIMARY KEY (script_id);
+
+
+--
+-- TOC entry 4841 (class 2606 OID 25548)
+-- Name: take take_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.take
+    ADD CONSTRAINT take_pkey PRIMARY KEY (movie_id, scene_number, take_number);
+
+
+--
+-- TOC entry 4870 (class 2606 OID 25635)
+-- Name: actor_of_scene actor_of_scene_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor_of_scene
+    ADD CONSTRAINT actor_of_scene_actor_id_fkey FOREIGN KEY (actor_id) REFERENCES public.actor(actor_id);
+
+
+--
+-- TOC entry 4871 (class 2606 OID 25630)
+-- Name: actor_of_scene actor_of_scene_movie_id_scene_number_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.actor_of_scene
+    ADD CONSTRAINT actor_of_scene_movie_id_scene_number_fkey FOREIGN KEY (movie_id, scene_number) REFERENCES public.scene(movie_id, scene_number);
+
+
+--
+-- TOC entry 4866 (class 2606 OID 25604)
+-- Name: author_of_script author_of_script_employee_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.author_of_script
+    ADD CONSTRAINT author_of_script_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES public.employee(employee_id);
+
+
+--
+-- TOC entry 4867 (class 2606 OID 25599)
+-- Name: author_of_script author_of_script_script_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.author_of_script
+    ADD CONSTRAINT author_of_script_script_id_fkey FOREIGN KEY (script_id) REFERENCES public.script(script_id);
+
+
+--
+-- TOC entry 4864 (class 2606 OID 25584)
+-- Name: employee_of_movie employee_of_movie_employee_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee_of_movie
+    ADD CONSTRAINT employee_of_movie_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES public.employee(employee_id);
+
+
+--
+-- TOC entry 4865 (class 2606 OID 25589)
+-- Name: employee_of_movie employee_of_movie_movie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee_of_movie
+    ADD CONSTRAINT employee_of_movie_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES public.movie(movie_id);
+
+
+--
+-- TOC entry 4862 (class 2606 OID 25573)
+-- Name: employee_of_scene employee_of_scene_employee_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee_of_scene
+    ADD CONSTRAINT employee_of_scene_employee_id_fkey FOREIGN KEY (employee_id) REFERENCES public.employee(employee_id);
+
+
+--
+-- TOC entry 4863 (class 2606 OID 25568)
+-- Name: employee_of_scene employee_of_scene_movie_id_scene_number_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.employee_of_scene
+    ADD CONSTRAINT employee_of_scene_movie_id_scene_number_fkey FOREIGN KEY (movie_id, scene_number) REFERENCES public.scene(movie_id, scene_number);
+
+
+--
+-- TOC entry 4872 (class 2606 OID 25650)
+-- Name: equipment_of_scene equipment_of_scene_equipment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment_of_scene
+    ADD CONSTRAINT equipment_of_scene_equipment_id_fkey FOREIGN KEY (equipment_id) REFERENCES public.equipment(equipment_id);
+
+
+--
+-- TOC entry 4873 (class 2606 OID 25645)
+-- Name: equipment_of_scene equipment_of_scene_movie_id_scene_number_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.equipment_of_scene
+    ADD CONSTRAINT equipment_of_scene_movie_id_scene_number_fkey FOREIGN KEY (movie_id, scene_number) REFERENCES public.scene(movie_id, scene_number);
+
+
+--
+-- TOC entry 4874 (class 2606 OID 25660)
+-- Name: genre_of_movie genre_of_movie_movie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.genre_of_movie
+    ADD CONSTRAINT genre_of_movie_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES public.movie(movie_id);
+
+
+--
+-- TOC entry 4858 (class 2606 OID 25483)
+-- Name: movie movie_script_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.movie
+    ADD CONSTRAINT movie_script_id_fkey FOREIGN KEY (script_id) REFERENCES public.script(script_id);
+
+
+--
+-- TOC entry 4868 (class 2606 OID 25615)
+-- Name: role_of_actor role_of_actor_actor_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.role_of_actor
+    ADD CONSTRAINT role_of_actor_actor_id_fkey FOREIGN KEY (actor_id) REFERENCES public.actor(actor_id);
+
+
+--
+-- TOC entry 4869 (class 2606 OID 25620)
+-- Name: role_of_actor role_of_actor_character_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.role_of_actor
+    ADD CONSTRAINT role_of_actor_character_id_fkey FOREIGN KEY (character_id) REFERENCES public."character"(character_id);
+
+
+--
+-- TOC entry 4859 (class 2606 OID 25508)
+-- Name: scene scene_location_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.scene
+    ADD CONSTRAINT scene_location_id_fkey FOREIGN KEY (location_id) REFERENCES public.location(location_id);
+
+
+--
+-- TOC entry 4860 (class 2606 OID 25503)
+-- Name: scene scene_movie_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.scene
+    ADD CONSTRAINT scene_movie_id_fkey FOREIGN KEY (movie_id) REFERENCES public.movie(movie_id);
+
+
+--
+-- TOC entry 4861 (class 2606 OID 25549)
+-- Name: take take_movie_id_scene_number_fkey; Type: FK CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.take
+    ADD CONSTRAINT take_movie_id_scene_number_fkey FOREIGN KEY (movie_id, scene_number) REFERENCES public.scene(movie_id, scene_number);
+
+
+-- Completed on 2026-06-15 15:15:16
+
+--
+-- PostgreSQL database dump complete
+--
+
+\unrestrict WVgdd3XVeTDDc6l68xOI3I0wZp0LZuQjr1iTbpSKyekBEZhL4T0ygmWq3BAtGfT
+
